@@ -16,6 +16,7 @@ import { doc, setDoc, getDoc } from "firebase/firestore";
 import { auth, db } from "@/lib/firebase_auth";
 import { setUser } from "@/store/authSlice";
 
+// Schemas
 const loginSchema = z.object({
   email: z.string().email("Invalid email"),
   password: z.string().min(6, "Password must be at least 6 characters"),
