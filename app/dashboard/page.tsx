@@ -1,7 +1,7 @@
 'use client'
 
 import { useSelector, useDispatch } from "react-redux"
-import { useRouter } from "next/navigation" // Fixed import for App Router
+import { useRouter } from "next/navigation"
 import { auth } from "@/lib/firebase_auth"
 import { clearUser } from "@/store/authSlice"
 import AdminDashboard from "@/components/AdminDashboard"
@@ -19,28 +19,43 @@ export default function DashboardPage() {
     }
 
     if (loading) {
-        return <div className="p-8 text-center">Loading dashboard...</div>;
+        return (
+            <div className="min-h-screen flex items-center justify-center font-sans text-gray-500">
+                Loading account details...
+            </div>
+        );
     }
 
     return (
-        <div className="min-h-screen bg-gray-50 p-8">
-            <div className="max-w-6xl mx-auto">
-                {/* Header */}
-                <div className="flex justify-between items-center bg-white p-4 rounded-lg shadow-sm mb-6">
+        <div className="min-h-screen bg-gray-50 text-black p-8 font-sans">
+            <div className="max-w-7xl mx-auto">
+                <div className="bg-white p-8 border border-gray-200 rounded-lg flex flex-col md:flex-row md:justify-between md:items-end gap-6 mb-8 shadow-sm">
                     <div>
-                        <h1 className="text-2xl font-bold text-gray-800">Dashboard</h1>
-                        <p className="text-sm text-gray-500">Logged in as: {email} ({role})</p>
+                        <h1 className="text-3xl font-bold tracking-tight mb-2">My Account</h1>
+                        <p className="text-gray-600">
+                            Signed in as <span className="font-semibold text-black">{email}</span>
+                        </p>
+                        <div className="mt-4">
+                            <span className="px-3 py-1 bg-black text-white text-xs font-bold uppercase tracking-widest rounded-sm">
+                                Role: {role || 'Guest'}
+                            </span>
+                        </div>
                     </div>
+                    
                     <button 
                         onClick={handleLogout} 
-                        className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md transition-colors"
+                        className="w-full md:w-auto border border-black text-black px-6 py-2.5 font-semibold hover:bg-black hover:text-white transition-colors rounded-md"
                     >
-                        Logout
+                        Sign Out
                     </button>
                 </div>
 
-                {/* Render Dashboard based on role */}
-                {role === 'admin' ? <AdminDashboard /> : <UserDashboard />}
+                {role === 'admin' ? (
+                    <AdminDashboard /> 
+                ) : (
+                    <UserDashboard />
+                )}
+                
             </div>
         </div>
     )
