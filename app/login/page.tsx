@@ -58,7 +58,7 @@ export default function AuthPage() {
     setLoading(true);
 
     try {
-      if (!isLogin) {
+      if (!isLogin && "role" in data) {
         const userCred = await createUserWithEmailAndPassword(
           auth,
           data.email,
