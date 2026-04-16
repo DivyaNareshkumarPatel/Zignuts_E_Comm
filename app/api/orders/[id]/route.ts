@@ -1,15 +1,16 @@
 import { NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
 import { doc, updateDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebase_auth';
 
 export async function PATCH(
-    request: Request, 
-    { params }: { params: { id: string } }
+    request: NextRequest,
+    context: { params: Promise<{ id: string }> }
 ) {
     try {
-        const id = params.id;
+        const { id } = await context.params;
 
-        const { status } = await request.json();
+        const { status }: { status: string } = await request.json();
 
         if (!status) {
             return NextResponse.json(
