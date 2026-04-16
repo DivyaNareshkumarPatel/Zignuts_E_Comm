@@ -53,7 +53,7 @@ export default function AuthPage() {
     resolver: zodResolver(isLogin ? loginSchema : signupSchema),
   });
 
-  const onSubmit = async (data: any) => {
+  const onSubmit = async (data: LoginForm | SignupForm) => {
     setError("");
     setLoading(true);
 
@@ -128,17 +128,10 @@ export default function AuthPage() {
         </h2>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-          {!isLogin && (
-            <div>
-              <input
-                {...register("name")}
-                placeholder="Full Name"
-                className="w-full border rounded-lg p-2"
-              />
-              {errors.name && (
-                <p className="text-red-500 text-sm">{errors.name.message?.toString()}</p>
-              )}
-            </div>
+          {!isLogin && "name" in errors && errors.name && (
+            <p className="text-red-500 text-sm">
+              {errors.name.message?.toString()}
+            </p>
           )}
 
           <div>
@@ -173,7 +166,7 @@ export default function AuthPage() {
                   placeholder="Confirm Password"
                   className="w-full border rounded-lg p-2"
                 />
-                {errors.confirmPassword && (
+                {!isLogin && "confirmPassword" in errors && errors.confirmPassword && (
                   <p className="text-red-500 text-sm">
                     {errors.confirmPassword.message?.toString()}
                   </p>
