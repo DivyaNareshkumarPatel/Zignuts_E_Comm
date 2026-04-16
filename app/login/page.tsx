@@ -16,7 +16,6 @@ import { doc, setDoc, getDoc } from "firebase/firestore";
 import { auth, db } from "@/lib/firebase_auth";
 import { setUser } from "@/store/authSlice";
 
-// Schemas
 const loginSchema = z.object({
   email: z.string().email("Invalid email"),
   password: z.string().min(6, "Password must be at least 6 characters"),
@@ -36,6 +35,8 @@ const signupSchema = z
   });
 
 export default function AuthPage() {
+  type LoginForm = z.infer<typeof loginSchema>;
+  type SignupForm = z.infer<typeof signupSchema>;
   const [isLogin, setIsLogin] = useState(true);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -48,7 +49,7 @@ export default function AuthPage() {
     handleSubmit,
     formState: { errors },
     reset,
-  } = useForm<any>({
+  } = useForm<LoginForm | SignupForm>({
     resolver: zodResolver(isLogin ? loginSchema : signupSchema),
   });
 
@@ -135,7 +136,7 @@ export default function AuthPage() {
                 className="w-full border rounded-lg p-2"
               />
               {errors.name && (
-                <p className="text-red-500 text-sm">{errors.name.message}</p>
+                <p className="text-red-500 text-sm">{errors.name.message?.toString()}</p>
               )}
             </div>
           )}
@@ -147,7 +148,7 @@ export default function AuthPage() {
               className="w-full border rounded-lg p-2"
             />
             {errors.email && (
-              <p className="text-red-500 text-sm">{errors.email.message}</p>
+              <p className="text-red-500 text-sm">{errors.email.message?.toString()}</p>
             )}
           </div>
 
@@ -159,7 +160,7 @@ export default function AuthPage() {
               className="w-full border rounded-lg p-2"
             />
             {errors.password && (
-              <p className="text-red-500 text-sm">{errors.password.message}</p>
+              <p className="text-red-500 text-sm">{errors.password.message?.toString()}</p>
             )}
           </div>
 
@@ -174,7 +175,7 @@ export default function AuthPage() {
                 />
                 {errors.confirmPassword && (
                   <p className="text-red-500 text-sm">
-                    {errors.confirmPassword.message}
+                    {errors.confirmPassword.message?.toString()}
                   </p>
                 )}
               </div>
@@ -203,8 +204,8 @@ export default function AuthPage() {
             {loading
               ? "Processing..."
               : isLogin
-              ? "Login"
-              : "Create Account"}
+                ? "Login"
+                : "Create Account"}
           </button>
         </form>
 
