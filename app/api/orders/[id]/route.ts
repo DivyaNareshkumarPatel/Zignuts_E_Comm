@@ -4,15 +4,19 @@ import { db } from '@/lib/firebase_auth';
 
 export async function PATCH(
     request: Request, 
-    { params }: { params: Promise<{ id: string }> }
+    { params }: { params: { id: string } }
 ) {
     try {
-        const resolvedParams = await params;
-        const id = resolvedParams.id;
-        
+        const id = params.id;
+
         const { status } = await request.json();
-        
-        if (!status) return NextResponse.json({ error: 'Status is required' }, { status: 400 });
+
+        if (!status) {
+            return NextResponse.json(
+                { error: 'Status is required' },
+                { status: 400 }
+            );
+        }
 
         const orderRef = doc(db, 'orders', id);
         await updateDoc(orderRef, { status });
@@ -20,6 +24,9 @@ export async function PATCH(
         return NextResponse.json({ success: true });
     } catch (error) {
         console.error("PATCH Order Error:", error);
-        return NextResponse.json({ error: 'Failed to update order' }, { status: 500 });
+        return NextResponse.json(
+            { error: 'Failed to update order' },
+            { status: 500 }
+        );
     }
 }
